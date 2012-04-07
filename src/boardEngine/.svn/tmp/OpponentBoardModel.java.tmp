@@ -1,0 +1,84 @@
+package boardEngine;
+
+/**
+ * @author Kevin and Zach*/
+
+import java.util.ArrayList;
+
+import datatypes.Coordinate;
+
+public class OpponentBoardModel extends BoardModel {
+
+	public OpponentBoardModel(int width, int height, ArrayList<Integer> shipList) {
+		super(width, height, shipList);
+	}
+
+	// Updates boardModel based on input int x and y
+	public void updateModel(int row, int col, boolean response) {
+		if (response) {
+			getBoard()[row][col] = HIT;
+		}
+		if (!response) {
+			getBoard()[row][col] = MISS;
+		}
+	}
+
+	
+	public String boardRepFromArray() {
+		String dummyString = new String("");
+		for (int i = 0; i < super.getHeight(); ++i) {
+			for (int j = 0; j < super.getWidth(); ++j) {
+				System.out.println("(" + i + "," + j + ")");
+				String boardHashString = dummyString + (getBoard()[i][j] % 2);
+				dummyString = boardHashString;
+			}
+		}
+		return dummyString;
+	}
+	
+	// Sets last targeted cell to lastTargeted
+	public void setLastTargeted(Coordinate targetMessageCoordinate) {
+		super.lastTargeted = targetMessageCoordinate;
+	}
+
+	public boolean isVacant(int i,int j) {
+		// TODO Auto-generated method stub 
+		
+		if ((i < this.getWidth() && i > -1) && (j < this.getHeight() && j > -1))
+			return this.getBoard()[i][j] == BoardModel.VAC;
+		else return true;
+	}
+
+	public boolean noNeighbors(int i, int j) {
+		// TODO Auto-generated method stub
+		boolean up = super.isOccupied(i+1,j);
+		boolean down = super.isOccupied(i-1, j);
+		boolean left = super.isOccupied(i, j-1);
+		boolean right = super.isOccupied(i, j+1);
+		return (!((up || down) || (left || right)));
+	}
+
+	public boolean noNeighborPairs(int i, int j) {
+		// TODO Auto-generated method stub
+		boolean up = super.isOccupied(i+1,j);
+		boolean down = super.isOccupied(i-1, j);
+		boolean left = super.isOccupied(i, j-1);
+		boolean right = super.isOccupied(i, j+1);
+		return (!((up && down) || (left && right)));
+	}
+
+	public boolean rightAngle(int i, int j) {
+		// TODO Auto-generated method stub
+		boolean ur = (super.isOccupied(i+1,j+1) && super.isOccupied(i,j+1));
+		boolean ru = (super.isOccupied(i+1, j+1) && super.isOccupied(i+1,j));
+		boolean dr = (super.isOccupied(i,j+1) && super.isOccupied(i-1,j+1));
+		boolean dl = (super.isOccupied(i,j-1) && super.isOccupied(i-1,j-1));
+		boolean rd = (super.isOccupied(i-1,j+1) && super.isOccupied(i-1,j));
+		boolean	ld = (super.isOccupied(i-1,j-1) && super.isOccupied(i-1,j));
+		
+		if (ur || ru || dr || dl || rd || ld) {
+			return true;
+		}
+		return false;
+	}
+}
